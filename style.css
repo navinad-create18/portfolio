@@ -94,3 +94,24 @@ p{
 a{
   color:#5bff39
 }
+
+* {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+
+    a {
+        color: #08f;
+    }
+
+    #content {
+        position: absolute;
+        top: 0; width: 100%;
+       
+        z-index: 1;
+        padding: 3em 0 0 0;
+    }
+
+
+
+		

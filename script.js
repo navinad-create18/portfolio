@@ -34,7 +34,7 @@ function init() {
 
     const content = document.getElementById( 'content' );
 
-    for ( let i = 0; i < 40; i ++ ) {
+    for ( let i = 0; i < 2; i ++ ) {
 
         const scene = new THREE.Scene();
         scene.backgroundNode = color( 0xeeeeee );
@@ -46,13 +46,11 @@ function init() {
         const sceneCanvas = document.createElement( 'canvas' );
         element.appendChild( sceneCanvas );
 
-        const descriptionElement = document.createElement( 'div' );
-        descriptionElement.innerText = 'Scene ' + ( i + 1 );
-        element.appendChild( descriptionElement );
+       
 
         const canvasTarget = new THREE.CanvasTarget( sceneCanvas );
         canvasTarget.setPixelRatio( window.devicePixelRatio );
-        canvasTarget.setSize( 200, 200 );
+        canvasTarget.setSize( 300, 300 );
 
         // the element that represents the area we want to render the scene
         scene.userData.canvasTarget = canvasTarget;
