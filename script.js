@@ -19,103 +19,115 @@ if ( WebGPU.isAvailable() === false ) {
 
 let renderer;
 
-const scenes = [];
+function makeScene(elem) {
+  const scene = new THREE.Scene();
+ 
+  const fov = 45;
+  const aspect = 2;  // the canvas default
+  const near = 0.1;
+  const far = 5;
+  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.z = 2;
+  camera.position.set(0, 1, 2);
+  camera.lookAt(0, 0, 0);
+ 
+  {
+    const color = 0xFFFFFF;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    scene.add(light);
+  }
+ 
+  return {scene, camera, elem};
+}
+ 
+function setupScene1() {
+  const sceneInfo = makeScene(document.querySelector('#box'));
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshPhongMaterial({color: 'red'});
+  const mesh = new THREE.Mesh(geometry, material);
+  sceneInfo.scene.add(mesh);
+  sceneInfo.mesh = mesh;
+  return sceneInfo;
+}
+ 
+function setupScene2() {
+  const sceneInfo = makeScene(document.querySelector('#pyramid'));
+  const radius = 0.8;
+  const widthSegments = 4;
+  const heightSegments = 2;
+  const geometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
+  const material = new THREE.MeshPhongMaterial({
+    color: 'blue',
+    flatShading: true,
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  sceneInfo.scene.add(mesh);
+  sceneInfo.mesh = mesh;
+  return sceneInfo;
+}
+ 
 
-init();
+const sceneInfo1 = setupScene1();
+const sceneInfo2 = setupScene2();
 
-function init() {
 
-    const geometries = [
-        new THREE.BoxGeometry( 1, 1, 1 ),
-        new THREE.SphereGeometry( 0.5, 12, 8 ),
-        new THREE.DodecahedronGeometry( 0.5 ),
-        new THREE.CylinderGeometry( 0.5, 0.5, 1, 12 )
-    ];
-
-    const content = document.getElementById( 'content' );
-
-    for ( let i = 0; i < 2; i ++ ) {
-
-        const scene = new THREE.Scene();
-        scene.backgroundNode = color( 0xeeeeee );
-
-        // make a list item
-        const element = document.createElement( 'div' );
-        element.className = 'list-item';
-
-        const sceneCanvas = document.createElement( 'canvas' );
-        element.appendChild( sceneCanvas );
-
-       
-
-        const canvasTarget = new THREE.CanvasTarget( sceneCanvas );
-        canvasTarget.setPixelRatio( window.devicePixelRatio );
-        canvasTarget.setSize( 300, 300 );
-
-        // the element that represents the area we want to render the scene
-        scene.userData.canvasTarget = canvasTarget;
-        content.appendChild( element );
-
-        const camera = new THREE.PerspectiveCamera( 50, 1, 1, 10 );
-        camera.position.z = 2;
-        scene.userData.camera = camera;
-
-        const controls = new OrbitControls( scene.userData.camera, scene.userData.canvasTarget.domElement );
-        controls.minDistance = 2;
-        controls.maxDistance = 5;
-        controls.enablePan = false;
-        controls.enableZoom = false;
-        scene.userData.controls = controls;
-
-        // add one random mesh to each scene
-        const geometry = geometries[ geometries.length * Math.random() | 0 ];
-
-        const material = new THREE.MeshStandardMaterial( {
-
-            color: new THREE.Color().setHSL( Math.random(), 1, 0.75, THREE.SRGBColorSpace ),
-            roughness: 0.5,
-            metalness: 0,
-            flatShading: true
-
-        } );
-
-        scene.add( new THREE.Mesh( geometry, material ) );
-
-        scene.add( new THREE.HemisphereLight( 0xaaaaaa, 0x444444, 3 ) );
-
-        const light = new THREE.DirectionalLight( 0xffffff, 1.5 );
-        light.position.set( 1, 1, 1 );
-        scene.add( light );
-
-        scenes.push( scene );
-
-    }
-
-    renderer = new THREE.WebGPURenderer( { antialias: true } );
-    renderer.setClearColor( 0xffffff, 1 );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setAnimationLoop( animate );
-
+function renderSceneInfo(sceneInfo) {
+  const {scene, camera, elem} = sceneInfo;
+ 
+  // get the viewport relative position of this element
+  const {left, right, top, bottom, width, height} =
+      elem.getBoundingClientRect();
+ 
+  const isOffscreen =
+      bottom < 0 ||
+      top > renderer.domElement.clientHeight ||
+      right < 0 ||
+      left > renderer.domElement.clientWidth;
+ 
+  if (isOffscreen) {
+    return;
+  }
+ 
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+ 
+  const positiveYUpBottom = canvasRect.height - bottom;
+  renderer.setScissor(left, positiveYUpBottom, width, height);
+  renderer.setViewport(left, positiveYUpBottom, width, height);
+ 
+  renderer.render(scene, camera);
 }
 
-function animate() {
-
-    scenes.forEach( function ( scene ) {
-
-        // so something moves
-        //scene.children[ 0 ].rotation.y = Date.now() * 0.001;
-
-        // get the canvas and camera for this scene
-        const { canvasTarget, camera } = scene.userData;
-
-        //camera.aspect = width / height; // not changing in this example
-        //camera.updateProjectionMatrix();
-
-        //scene.userData.controls.update();
-
-        renderer.setCanvasTarget( canvasTarget );
-        renderer.render( scene, camera );
-
-    } );
-
+function render(time) {
+  time *= 0.001;
+ 
+  resizeRendererToDisplaySize(renderer);
+ 
+  renderer.setScissorTest(false);
+  renderer.clear(true, true);
+  renderer.setScissorTest(true);
+ 
+  sceneInfo1.mesh.rotation.y = time * 0.1;
+  sceneInfo2.mesh.rotation.y = time * 0.1;
+ 
+  renderSceneInfo(sceneInfo1);
+  renderSceneInfo(sceneInfo2);
+ 
+  requestAnimationFrame(render);
 }
+//
+//function animate() {
+//
+//    scenes.forEach( function ( scene ) {
+//
+//        //camera.aspect = width / height; // not changing in this example
+//        //camera.updateProjectionMatrix();
+//
+//        //scene.userData.controls.update();
+//        renderer.render( scene, camera );
+//
+//    } );
+//
+//}
