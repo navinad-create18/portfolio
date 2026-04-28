@@ -90,27 +90,36 @@ p{
   font-style: normal;
   font-size: 27px;
 }
+
+
 /* restyle link color */
-a{
-  color:#5bff39
-}
-
-* {
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-    }
-
     a {
         color: #08f;
     }
 
-    #content {
-        position: absolute;
-        top: 0; width: 100%;
-       
-        z-index: 1;
-        padding: 3em 0 0 0;
-    }
+   #c {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: -1;
+}
+.diagram {
+  display: inline-block;
+  width: 5em;
+  height: 3em;
+  border: 1px solid black;
+}
+.left {
+  float: left;
+  margin-right: .25em;
+}
+.right {
+  float: right;
+  margin-left: .25em;
+}
 
 
 
