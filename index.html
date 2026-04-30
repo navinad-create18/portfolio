@@ -5,22 +5,22 @@
         <title>Navina's Portfolio</title>
         <link rel="stylesheet" type="text/css" href="./style.css" />
         
+        <script type="importmap">
+{
+  "imports": {
+    "three": "./src/three.module.js"
+  }
+}
+</script>
         
           <!-- Needed for Three.js resources to connect to script. -->
-       	<script type="importmap">
-			{
-				"imports": {
-					"three": "./src/three.webgpu.js",
-					"three/webgpu": "./src/three.webgpu.js",
-					"three/tsl": "./src/three.tsl.js",
-					"three/addons/": "./jsm/"
-				}
-			}
-		</script>
+    
         <!-- Three.js scene script, must contain module type. -->
         <script type= "module" src="./script.js"></script>
     </head>
     <body>
+   
+        
         	<div id="content">
 		</div>
         
@@ -33,16 +33,16 @@
             diverse projects with the goal of communicating unique themes to audiences.</p>
         </div>
         </div>
-    <!-- testing multiple canvases-->
+      
+              <!-- testing multiple canvases-->
         <p>
-            <span id="box" class="diagram left"></span>
-            Some text
-        </p>
-        
-        <p>
-            <span id="pyramid" class="diagram right"></span>
-            Some more text
-        </p>
+      <span data-diagram="box" class="left"></span>
+      I love boxes.
+    </p>
+    <p>
+      <span data-diagram="pyramid" class="right"></span>
+      Pyramids.
+    </p>
         
         <div class="alignDivs">
         <div class="imageBlock">
