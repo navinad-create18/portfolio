@@ -110,10 +110,13 @@ p{
     .left {
       float: left;
       margin-right: .25em;
+      width: 100%
+        
     }
     .right {
       float: right;
       margin-left: .25em;
+       width: 100%
     }
     p {
       margin: 1em auto;

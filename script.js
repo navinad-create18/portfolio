@@ -1,9 +1,20 @@
 import * as THREE from 'three';
 
 import { OrbitControls } from './src/OrbitControls.js';
+import { Font } from "./src/FontLoader.js";
+import { TTFLoader } from "./src/TTFLoader.js";
+import { TextGeometry } from "./src/TextGeometry.js";
+
+// text variables
+let font;
+let text = "Navina";
+let textGeo;
+let materials;
+let textMesh1;
+let group;
 
 
-//from tutourial
+//from tutourial here: https://threejs.org/manual/?q=sce#en/multiple-scenes
 function main() {
 
 	const canvas = document.createElement( 'canvas' );
@@ -55,13 +66,36 @@ function main() {
 		'box': ( elem ) => {
 
 			const { scene, camera, controls } = makeScene( elem );
-			const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			const material = new THREE.MeshPhongMaterial( { color: 'red' } );
-			const mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
+			 // text
+
+			// materials for the text
+			materials = [
+				new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true }), // front
+				new THREE.MeshPhongMaterial({ color: 0x5d176a }) // side
+			];
+
+			// establish font loader
+			const loader = new TTFLoader();
+
+			// use loader with desired ttf font
+			loader.load("./assets/Righteous-Regular.ttf", function (json) {
+				font = new Font(json);
+				// see create text function below
+				createText();
+			});
+
+			// add resulting shapes to scene
+			group = new THREE.Group();
+			//group.position.y = 100;
+
+			//scene.add(group);
+			//const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+			//const material = new THREE.MeshPhongMaterial( { color: 'red' } );
+			//const mesh = new THREE.Mesh( geometry, material );
+			//scene.add( mesh );
 			return ( time, rect ) => {
 
-				mesh.rotation.y = time * 0.1;
+				//mesh.rotation.y = time * 0.1;
 				camera.aspect = rect.width / rect.height;
 				camera.updateProjectionMatrix();
 				controls.update();
@@ -85,7 +119,7 @@ function main() {
 			scene.add( mesh );
 			return ( time, rect ) => {
 
-				mesh.rotation.y = time * 0.1;
+				//mesh.rotation.y = time * 0.1;
 				camera.aspect = rect.width / rect.height;
 				camera.updateProjectionMatrix();
 				controls.update();
@@ -104,6 +138,38 @@ function main() {
 		addScene( elem, sceneRenderFunction );
 
 	} );
+	
+	// Function to generate text shapes
+function createText() {
+    // create geomtery with parameters, change parameters to test modifications
+    // "text" on next line is the message to be written
+    textGeo = new TextGeometry(text, {
+        font: font,
+        size: 20,
+        depth: 10,
+        curveSegments: 4,
+        bevelThickness: 2,
+        bevelSize: 1.5,
+        bevelEnabled: true
+    });
+
+    // finish making geometry
+    textGeo.computeBoundingBox();
+    const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+
+    // apply material to geometry
+    textMesh1 = new THREE.Mesh(textGeo, materials);
+
+    // set position and rotation
+    textMesh1.position.x = centerOffset;
+    textMesh1.position.z = -200;
+    textMesh1.position.y = -100;
+    textMesh1.rotation.x = 0;
+    textMesh1.rotation.y = Math.PI * 2;
+
+    // add to group to be added to scene
+    group.add(textMesh1);
+}
 
 	function render( time ) {
 
