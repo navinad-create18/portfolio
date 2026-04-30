@@ -45,7 +45,7 @@ function main() {
 		scene.add( camera );
 
 		const controls = new OrbitControls( camera, elem );
-		controls.enableZoom = false;
+		controls.enableZoom = true;
 		controls.enablePan = false;
 
 		{
@@ -66,6 +66,7 @@ function main() {
 		'box': ( elem ) => {
 
 			const { scene, camera, controls } = makeScene( elem );
+			scene.background = new THREE.Color(0x7067d5);
 			 // text
 
 			// materials for the text
@@ -87,8 +88,9 @@ function main() {
 			// add resulting shapes to scene
 			group = new THREE.Group();
 			//group.position.y = 100;
+			//group.scale.set (10,10,10);
 
-			//scene.add(group);
+			scene.add(group);
 			//const geometry = new THREE.BoxGeometry( 1, 1, 1 );
 			//const material = new THREE.MeshPhongMaterial( { color: 'red' } );
 			//const mesh = new THREE.Mesh( geometry, material );
@@ -107,6 +109,7 @@ function main() {
 		'pyramid': ( elem ) => {
 
 			const { scene, camera, controls } = makeScene( elem );
+			scene.background = new THREE.Color(0xffffff);
 			const radius = 0.8;
 			const widthSegments = 4;
 			const heightSegments = 2;
@@ -145,12 +148,12 @@ function createText() {
     // "text" on next line is the message to be written
     textGeo = new TextGeometry(text, {
         font: font,
-        size: 20,
-        depth: 10,
-        curveSegments: 4,
-        bevelThickness: 2,
-        bevelSize: 1.5,
-        bevelEnabled: true
+        size: 0.5,
+        depth: 0.1
+        //curveSegments: 4,
+        //bevelThickness: 2,
+        //bevelSize: 1.5,
+        //bevelEnabled: true
     });
 
     // finish making geometry
@@ -162,10 +165,9 @@ function createText() {
 
     // set position and rotation
     textMesh1.position.x = centerOffset;
-    textMesh1.position.z = -200;
-    textMesh1.position.y = -100;
-    textMesh1.rotation.x = 0;
-    textMesh1.rotation.y = Math.PI * 2;
+    textMesh1.position.z = 0;
+    textMesh1.position.y = -0.2;
+    textMesh1.rotation.x = Math.PI * -0.13;
 
     // add to group to be added to scene
     group.add(textMesh1);
