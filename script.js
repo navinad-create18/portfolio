@@ -5,6 +5,10 @@ import { Font } from "./src/FontLoader.js";
 import { TTFLoader } from "./src/TTFLoader.js";
 import { TextGeometry } from "./src/TextGeometry.js";
 
+//for periodic table
+import TWEEN from './src/tween.module.js';
+import { CSS3DRenderer, CSS3DObject } from './src/CSS3DRenderer.js';
+
 // text variables
 let font;
 let text = "Navina";
@@ -106,20 +110,22 @@ function main() {
 			};
 
 		},
+		//periodic table
 		'pyramid': ( elem ) => {
 
 			const { scene, camera, controls } = makeScene( elem );
-			scene.background = new THREE.Color(0xffffff);
-			const radius = 0.8;
-			const widthSegments = 4;
-			const heightSegments = 2;
-			const geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments );
-			const material = new THREE.MeshPhongMaterial( {
-				color: 'blue',
-				flatShading: true,
-			} );
-			const mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
+			scene.background = new THREE.Color(0x060326);
+			//const radius = 0.8;
+			//const widthSegments = 4;
+			//const heightSegments = 2;
+			//const geometry = new THREE.SphereGeometry( radius, widthSegments, heightSegments );
+			//const material = new THREE.MeshPhongMaterial( {
+			//	color: 'blue',
+			//	flatShading: true,
+			//} );
+			//const mesh = new THREE.Mesh( geometry, material );
+			//scene.add( mesh );
+			
 			return ( time, rect ) => {
 
 				//mesh.rotation.y = time * 0.1;
