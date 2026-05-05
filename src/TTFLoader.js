@@ -2,7 +2,7 @@ import {
 	FileLoader,
 	Loader
 } from 'three';
-import opentype from '/opentype.module.js';
+import opentype from '/src/opentype.module.js';
 
 /**
  * A loader for the TTF format.
