@@ -3,6 +3,8 @@
 /* p tag font: Economica */
 @import url('https://fonts.googleapis.com/css2?family=Economica:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+   @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Jockey+One&display=swap');
+
 h2{
     background-color: #7067d5;
     font-family: "Electrolize", sans-serif, Georgia;
@@ -76,18 +78,18 @@ body{
 }
 
 .alignButtons{
-  display:flex;
-  margin-bottom: 5%;
-  margin-left:30%;
-  justify-content: space-evenly;
-  align-items: center;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .alignText{
-  display:flex;
-  justify-content: space-evenly;
-  align-items: center;
-  flex-direction: column;
+   display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  margin: 2rem 0;
 }
 
 p{
@@ -106,27 +108,35 @@ p{
     }
 
     canvas {
-      width: 100%;
-      height: 100%;
       display: block;
     }
+
     *[data-diagram] {
-      display: inline-block;
-      width: 5em;
-      height: 3em;
-    }
-    .left {
+      display: block;
       position: relative;
-      margin-left: -100%;
-      width: 300%;
-      height: 100%;
+      overflow: hidden;
+    }
+
+    /*
+    *[data-diagram] canvas,
+    *[data-diagram] > div {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    */
+    .left {
+      width: 800px;
+      height: 600px;
+      margin: 0 auto;
+      margin-left: -30%
     }
     .right {
-      position: relative;
-      margin-left: -50%;
-      margin-bottom: -50%;
-       width: 50%;
-      height:50%;
+      width: 100vw;
+      margin-left: 30%;
+    height: 750px;
+    margin: 2rem auto;
+    position: relative;
+    overflow: hidden;
     }
     p {
       margin: 1em auto;
@@ -136,74 +146,150 @@ p{
 
 /*For Periodic table*/
 
-  #menu {
-      position: absolute;
-      bottom: 50px;
-      width: 100%;
-      text-align: center;
-  }
+ 
 
-  .element {
-      width: 120px;
-      height: 160px;
-      box-shadow: 1px 1px 12px rgba(0,255,255,0.5);
-      border: 1px solid rgba(127,255,255,0.25);
-      font-family: Helvetica, sans-serif;
-      text-align: center;
-      line-height: normal;
-      cursor: default;
-  }
+body {
+        background-color: #060326;
+    }
 
-  .element:hover {
-      box-shadow: 1px 1px 12px rgba(0,255,255,0.75);
-      border: 1px solid rgba(127,255,255,0.75);
-  }
+    a {
+        color: #8ff;
+    }
 
-      .element .number {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          font-size: 12px;
-          color: rgba(127,255,255,0.75);
-      }
+    #menu {
+        position: relative;
+        width: 200%;
+      margin-left: -50%;
+       
+    }
 
-      .element .symbol {
-          position: absolute;
-          top: 40px;
-          left: 1px;
-          right: 1px;
-          font-size: 60px;
-          font-weight: bold;
-          color: rgba(255,255,255,0.75);
-          text-shadow: 0 0 10px rgba(0,255,255,0.95);
-      }
+    .element {
+        position: relative;
+        width: 120px;
+        height: 160px;
+        box-shadow: 1px 1px 12px rgba(0,255,255,0.5);
+        border: 1px solid rgba(127,255,255,0.25);
+        font-family: Helvetica, sans-serif;
+        text-align: center;
+        line-height: normal;
+        cursor: pointer;
+        touch-action: manipulation;
+        user-select: none;
+        overflow: hidden;
+    }
 
-      .element .details {
-          position: absolute;
-          bottom: 15px;
-          left: 1px;
-          right: 1px;
-          font-size: 12px;
-          color: rgba(127,255,255,0.75);
-      }
+#elementPopover {
+    z-index: 9999;
+}
 
-  button {
-    position: relative;
-      color: rgba(127,255,255,0.75);
-      background: transparent;
-      outline: 1px solid rgba(127,255,255,0.75);
-      border: 1px;
-      padding: 5px 10px;
-      cursor: pointer;
-  }
+    .element:hover {
+        box-shadow: 1px 1px 12px rgba(0,255,255,0.75);
+        border: 1px solid rgba(127,255,255,0.75);
+    }
 
-  button:hover {
-      background-color: rgba(0,255,255,0.5);
-  }
+        /*
+        .element .number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(127,255,255,0.75);
+        }
+        */
 
-  button:active {
-      color: #000000;
-      background-color: rgba(0,255,255,0.75);
-  }
+        .element .symbol {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            
+            width: 110px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            
+        }
 
-		
+        .element .details {
+            position: absolute;
+            bottom: 15px;
+            left: 1px;
+            right: 1px;
+            font-size: 12px;
+            color: rgba(127,255,255,0.75);
+        }
+
+    button {
+        color: rgba(127,255,255,0.75);
+        background: transparent;
+        outline: 1px solid rgba(127,255,255,0.75);
+        border: 1px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: rgba(0,255,255,0.5);
+    }
+
+    button:active {
+        color: #000000;
+        background-color: rgba(0,255,255,0.75);
+    }
+
+/*For popover element that's animated*/
+#elementPopover {
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+#elementPopover::backdrop {
+    background: rgba(0,0,0,0.7);
+}
+
+.popover-text {
+    width: 500px;
+    min-height: 400px;
+    padding: 20px;
+
+    background: #9791ce;
+    border: 2px solid #8918d1;
+    border-radius: 10px;
+
+    color: #18143d;
+}
+
+
+#projectTitle {
+    font-size: 50px;
+    margin-bottom: 10px;
+    font-family: "Jockey One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #18143d;
+}
+
+#projectText{
+    font-size: 30px;
+    margin-bottom: 15px;
+    font-family: "Exo 2", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+}
+
+#projectImage{
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+/*closes Popover*/
+#closeButton{
+    margin-top: 15px;
+    background: #054d6c;
+    color: #9de1ff;
+    border: #38b1e5;
+    padding: 15px 30px;
+    cursor: pointer;
+
+}

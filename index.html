@@ -6,12 +6,13 @@
         <link rel="stylesheet" type="text/css" href="./style.css" />
         
         <script type="importmap">
-{
-  "imports": {
-    "three": "./src/three.module.js"
-  }
-}
-</script>
+		{
+				"imports": {
+					"three": "./src/three.module.js",
+					"three/addons/": "./jsm/"
+				}
+			}
+		</script>
         
           <!-- Needed for Three.js resources to connect to script. -->
     
@@ -19,11 +20,17 @@
         <script type= "module" src="./script.js"></script>
     </head>
     <body>
-   
-        
-        	<div id="content">
+
+        <!--Script for popovers-->
+		<div popover="auto" id="elementPopover">
+			<div class="popover-text">
+				<!--<img id="projectImage" src="./assets/OvergrownRuins_CoverArt.png" alt="Skull in a Meadow"> -->
+				<h2 id="projectTitle">Project</h2>
+				<h1 id="projectText"></h1>
+				
+				<button id="closeButton">Explore More</button>
+			</div>
 		</div>
-        
         <h1>Hi, my name is</h1>
         <div class="aligntText">
           <p>
@@ -40,17 +47,12 @@
       
               <!-- testing multiple canvases-->
     <p>
-      <span data-diagram="pyramid" class="right" id="menu"></span>
+      <span data-diagram="pyramid" class="right"></span>
         </p>
         <div class="alignButtons">
-            <div class="right">
-                <div class="alignDivs">
-            <button id="table">TABLE</button>
-			<button id="sphere">SPHERE</button>
-			<button id="helix">HELIX</button>
-			<button id="grid">GRID</button>
-                </div>
-        </div>
+             
+            <button id="helix">Explore</button>
+                
         </div>
         <!--
         <div class="alignDivs">

@@ -24,6 +24,8 @@ function main() {
 	const canvas = document.createElement( 'canvas' );
 	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas, alpha: true } );
 
+	document.body.appendChild(renderer.domElement);
+	renderer.domElement.style.display = 'none';
 	renderer.setScissorTest( true );
 
 	const sceneElements = [];
@@ -70,7 +72,7 @@ function main() {
 		'box': ( elem ) => {
 
 			const { scene, camera, controls } = makeScene( elem );
-			scene.background = new THREE.Color(0x7067d5);
+			scene.background = new THREE.Color(0x1c2c8a);
 			 // text
 
 			// materials for the text
@@ -112,11 +114,35 @@ function main() {
 		},
 		//periodic table
 		'pyramid': ( elem ) => {
-
-			const { scene, camera, controls } = makeScene( elem );
-			scene.background = new THREE.Color(0x060326);
 			
 			
+			const scene = new THREE.Scene();
+			scene.background = new THREE.Color(0x1c2c8a);
+			const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.z = 1000;
+			
+			
+			const cssRenderer = new CSS3DRenderer();
+				cssRenderer.setSize( elem.clientWidth, elem.clientHeight );
+				elem.appendChild( cssRenderer.domElement );
+			
+			
+			
+			// Setup controls
+                const controls = new OrbitControls( camera, cssRenderer.domElement );
+                //controls.listenToKeyEvents( window ); 
+                controls.enableDamping = true; 
+                controls.dampingFactor = 0.05;
+                controls.screenSpacePanning = false;
+                controls.minDistance = 100;
+                controls.maxDistance = 3000;
+                controls.cursorStyle = 'grab';
+                controls.maxPolarAngle = Math.PI / 2;
+                controls.minPolarAngle = Math.PI /2;
+			
+			const objects = [];
+			
+			const targets = { table: [], helix: []};
 			const table = [
 				
 				{Image: './assets/butterfly_ar_interactiveImage.png', Title: 'Butterfly AR', Year: '2026', 
@@ -167,7 +193,230 @@ function main() {
 				
 			];
 			
+			init();
 			
+			
+			function init() {
+
+				// table
+
+				for ( const item of table ) {
+
+					const element = document.createElement( 'div' );
+					element.className = 'element';
+					element.pointerEvents = 'auto';
+					element.style.backgroundColor = 'rgba(0,127,127,' + ( Math.random() * 0.5 + 0.25 ) + ')';
+
+					//const number = document.createElement( 'div' );
+					//number.className = 'number';
+					//number.textContent = ( i / 5 ) + 1;
+					//element.appendChild( number );
+
+					const symbol = document.createElement( 'img' );
+					symbol.className = 'symbol';
+					symbol.src = item.Image;
+					element.appendChild( symbol );
+
+					const details = document.createElement( 'div' );
+					details.className = 'details';
+					details.innerHTML = item.Title + '<br>' + item.Year;
+					element.appendChild( details );
+					
+					const objectCSS = new CSS3DObject( element );
+					objectCSS.position.x = Math.random() * 4000 - 2000;
+					objectCSS.position.y = Math.random() * 4000 - 2000;
+					objectCSS.position.z = Math.random() * 4000 - 2000;
+					scene.add( objectCSS );
+
+					objects.push( objectCSS );
+					
+					const object = new THREE.Object3D();
+					object.position.x = ( item.x * 140 ) - 1330;
+					object.position.y = - ( item.y * 180 ) + 990;
+
+					targets.table.push( object );
+					
+			//popover click
+
+				let isDragging = false;
+
+		element.addEventListener('pointerdown', () => {
+
+			isDragging = false;
+
+			controls.enabled = false;
+
+		});
+
+		element.addEventListener('pointermove', () => {
+
+			isDragging = true;
+
+		});
+
+		element.addEventListener('pointerup', () => {
+
+
+			if (isDragging) return;
+
+			document.getElementById('projectTitle').textContent = item.popoverTitle;
+
+			document.getElementById('projectText').textContent =
+				item.popoverText;
+			
+			//document.getElementById('projectText').textContent =
+			//	table[i].popoverImage;
+
+			document.getElementById('elementPopover').showPopover();
+
+		});
+
+
+				}
+
+				// sphere
+
+				const vector = new THREE.Vector3();
+//
+				//for ( let i = 0, l = objects.length; i < l; i ++ ) {
+//
+				//	const phi = Math.acos( - 1 + ( 2 * i ) / l );
+				//	const theta = Math.sqrt( l * Math.PI ) * phi;
+//
+				//	const object = new THREE.Object3D();
+//
+				//	object.position.setFromSphericalCoords( 800, phi, theta );
+//
+				//	vector.copy( object.position ).multiplyScalar( 2 );
+//
+				//	object.lookAt( vector );
+//
+				//	targets.sphere.push( object );
+//
+				//}
+
+				// helix
+
+				for ( let i = 0, l = objects.length; i < l; i ++ ) {
+
+					const theta = i * 1.5 + Math.PI;
+					const y = 100;
+
+					const object = new THREE.Object3D();
+
+					object.position.setFromCylindricalCoords( 500, theta, y );
+
+					vector.x = object.position.x*2;
+					vector.y = object.position.y;
+					vector.z = object.position.z*2;
+
+					object.lookAt( vector );
+
+					targets.helix.push( object );
+
+				}
+
+				// grid
+
+				//for ( let i = 0; i < objects.length; i ++ ) {
+//
+				//	const object = new THREE.Object3D();
+//
+				//	object.position.x = ( ( i % 5 ) * 400 ) - 800;
+				//	object.position.y = ( - ( Math.floor( i / 5 ) % 5 ) * 400 ) + 800;
+				//	object.position.z = ( Math.floor( i / 25 ) ) * 1000 - 2000;
+//
+				//	targets.grid.push( object );
+//
+				//}
+
+				//
+
+				
+
+				//
+			
+	
+
+				//const buttonTable = document.getElementById( 'table' );
+				//buttonTable.addEventListener( 'click', function () {
+//
+				//	transform( targets.table, 2000 );
+//
+				//} );
+
+				//const buttonSphere = document.getElementById( 'sphere' );
+				//buttonSphere.addEventListener( 'click', function () {
+//
+				//	transform( targets.sphere, 2000 );
+//
+				//} );
+
+				const buttonHelix = document.getElementById( 'helix' );
+				if (buttonHelix) {
+
+					buttonHelix.addEventListener('click', () => {
+
+						transform(targets.helix, 2000);
+
+					});
+				}
+				//const buttonGrid = document.getElementById( 'grid' );
+				//buttonGrid.addEventListener( 'click', function () {
+//
+				//	transform( targets.grid, 2000 );
+//
+				//} );
+
+				transform( targets.table, 2000 );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize );
+
+			
+			
+			document.getElementById ('closeButton').addEventListener('click', ()=>{
+				document.getElementById('elementPopover').hidePopover();
+			 });
+
+			function transform( targets, duration ) {
+
+				TWEEN.removeAll();
+
+				for ( let i = 0; i < objects.length; i ++ ) {
+
+					const object = objects[ i ];
+					const target = targets[ i ];
+
+					new TWEEN.Tween( object.position )
+						.to( { x: target.position.x, y: target.position.y, z: target.position.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+
+					new TWEEN.Tween( object.rotation )
+						.to( { x: target.rotation.x, y: target.rotation.y, z: target.rotation.z }, Math.random() * duration + duration )
+						.easing( TWEEN.Easing.Exponential.InOut )
+						.start();
+
+				}
+
+				new TWEEN.Tween( this )
+					.to( {}, duration * 2 )
+					.start();
+                
+			}
+			
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				cssRenderer.setSize( window.innerWidth, window.innerHeight );
+
+				//cssRenderer();
+
+			}
 			
 			//const radius = 0.8;
 			//const widthSegments = 4;
@@ -180,18 +429,31 @@ function main() {
 			//const mesh = new THREE.Mesh( geometry, material );
 			//scene.add( mesh );
 
+			//return ( time, rect ) => {
+//
+			//	//mesh.rotation.y = time * 0.1;
+			//	camera.aspect = rect.width / rect.height;
+			//	camera.updateProjectionMatrix();
+			//	controls.update();
+			//	renderer.render( scene, camera );
+//
+			//};
+				
+		}
 			return ( time, rect ) => {
 
 				//mesh.rotation.y = time * 0.1;
 				camera.aspect = rect.width / rect.height;
 				camera.updateProjectionMatrix();
 				controls.update();
-				renderer.render( scene, camera );
+				
+				TWEEN.update();
+				cssRenderer.setSize( rect.width, rect.height );
+				cssRenderer.render( scene, camera );
 
 			};
-
-		},
-	};
+	}
+};
 
 	document.querySelectorAll( '[data-diagram]' ).forEach( ( elem ) => {
 
@@ -238,11 +500,18 @@ function createText() {
 		time *= 0.001;
 
 		for ( const { elem, fn, ctx } of sceneElements ) {
-
+			
 			// get the viewport relative position of this element
 			const rect = elem.getBoundingClientRect();
 			const { left, right, top, bottom, width, height } = rect;
 			const rendererCanvas = renderer.domElement;
+			
+			if (elem.dataset.diagram === 'pyramid') {
+
+				fn(time, rect);
+				continue;
+
+			}
 
 			const isOffscreen =
           bottom < 0 ||
